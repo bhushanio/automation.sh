@@ -1,0 +1,82 @@
+# To configure an FTP server on Kali Linux, you can use the vsftpd (Very Secure FTP Daemon) server
+
+#!/bin/bash
+
+# Update the package list
+sudo apt update
+
+# Install vsftpd
+sudo apt install vsftpd -y
+
+# Backup the original vsftpd.conf file
+sudo cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
+
+# Create a new vsftpd configuration file
+sudo touch /etc/vsftpd.conf
+
+# Add configuration settings to vsftpd.conf
+sudo tee /etc/vsftpd.conf > /dev/null <<EOL
+# Enable local users to log in
+local_enable=YES
+
+# Allow anonymous FTP login
+anonymous_enable=NO
+
+# Enable write access for authenticated users
+write_enable=YES
+
+# Chroot users to their home directories for security
+chroot_local_user=YES
+
+# Define the FTP data port range (optional)
+# pasv_min_port=30000
+# pasv_max_port=31000
+
+# Set the banner displayed to clients (optional)
+# banner_file=/etc/ftp_banner
+
+# Enable SSL for secure FTP (optional)
+# ssl_enable=YES
+# ssl_cert_file=/etc/ssl/private/vsftpd.pem
+# ssl_key_file=/etc/ssl/private/vsftpd.pem
+
+# Restrict anonymous users to a specific directory (optional)
+# anon_root=/var/ftp
+
+# Disable IPv6 (optional)
+# listen_ipv6=NO
+
+# Log FTP transactions
+xferlog_enable=YES
+xferlog_std_format=YES
+xferlog_file=/var/log/vsftpd.log
+
+# Define the userlist file for allowed and denied users (optional)
+# userlist_enable=YES
+# userlist_file=/etc/vsftpd.allowed_users
+# userlist_deny=NO
+
+EOL
+
+# Restart vsftpd service to apply the configuration
+sudo systemctl restart vsftpd
+
+# Enable vsftpd service to start at boot
+sudo systemctl enable vsftpd
+
+echo "vsftpd has been configured and started. You can now connect to the FTP server."
+
+# Optionally, you can add users and set their passwords for FTP access using 'sudo useradd' and 'sudo passwd'.
+# For example:
+# sudo useradd -m ftpuser
+# sudo passwd ftpuser
+
+# Save this script to a file, e.g., configure_ftp.sh, and then make it executable:
+chmod +x configure_ftp.sh
+
+# To run the script, execute:
+./configure_ftp.sh
+
+# This script will install and configure vsftpd with basic settings. 
+# You can customize the configuration file (/etc/vsftpd.conf) further according to your specific requirements, 
+# such as enabling SSL, setting up a userlist, or specifying a different FTP root directory.
