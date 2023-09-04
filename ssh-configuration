@@ -1,0 +1,37 @@
+# Automating the configuration of SSH on Kali Linux can be done using a Bash script. 
+# Here's a simple example of a Bash script, 
+# that automates the process of configuring SSH on Kali Linux:
+
+#!/bin/bash
+
+# Check if the script is run as root
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run this script as root."
+  exit 1
+fi
+
+# Install SSH server if not already installed
+if ! dpkg -l | grep -q "openssh-server"; then
+  echo "Installing OpenSSH Server..."
+  apt-get update
+  apt-get install -y openssh-server
+fi
+
+# Enable and start the SSH service
+systemctl enable ssh
+systemctl start ssh
+
+# Configure SSH settings (you can customize these as needed)
+echo "Configuring SSH..."
+echo "PermitRootLogin prohibit-password" >> /etc/ssh/sshd_config
+echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+echo "AllowUsers your_username" >> /etc/ssh/sshd_config
+
+# Reload SSH service to apply changes
+systemctl reload ssh
+
+# Display SSH status
+systemctl status ssh
+
+echo "SSH configuration is complete."
+
