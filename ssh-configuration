@@ -2,6 +2,7 @@
 # Here's a simple example of a Bash script, 
 # that automates the process of configuring SSH on Kali Linux:
 
+# <-- Script Starts From Here --->
 #!/bin/bash
 
 # Check if the script is run as root
@@ -35,3 +36,23 @@ systemctl status ssh
 
 echo "SSH configuration is complete."
 
+# <-- Script Ends Here --->
+
+#Note: -
+#  - Before running the script, make sure to:
+#      - Make the script executable: chmod +x configure_ssh.sh
+#      - Run it as root: sudo ./configure_ssh.sh
+
+#This script does the following:
+#  Checks if it's being run as root.
+#  Installs the OpenSSH Server package if it's not already installed.
+#  Enables and starts the SSH service.
+#  Configures SSH settings by appending specific lines to the sshd_config file. You can customize these settings according to your needs.
+#  Reloads the SSH service to apply the changes.
+#  Displays the status of the SSH service.
+  
+# Make sure to customize the script to fit your specific requirements, 
+# such as changing the SSH settings, 
+# specifying allowed users, and setting security options. 
+# Always be cautious when automating configuration changes on a system, 
+# especially regarding SSH, as it can impact system security.
