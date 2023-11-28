@@ -9,7 +9,7 @@ wget https://golang.org/dl/go1.21.4.linux-amd64.tar.gz
 rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.4.linux-amd64.tar.gz
 
 # Make some zsh configuration
-echo $'GOPATH=/root/go-workspace\nexport GOROOT=/usr/local/go\nPATH=$PATH:$GOROOT/bin/:$GOPATH/bin\n'
+echo $'GOPATH=/root/go-workspace\nexport GOROOT=/usr/local/go\nPATH=$PATH:$GOROOT/bin/:$GOPATH/bin\n' >> ~/.zshrc
 
 # Refresh the terminal
 source ~/.zshrc
