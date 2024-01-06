@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#Squid proxy runs on port 3128 - >> LOL <<
+
+#<---------START--------->
+
+#Customized Packet Manager <--------1--------->
+read -p "Enter Package Manager : apt|apt-get|yum : " mgr
+
+#Ask for current update <-------2---------->
+read -p "Enter y and n : " a
+if [ $a == "y" ] || [ $a == "Y" ];then
+        sudo $mgr upgrade -y && sudo apt update -y
+else
+        echo "<--No upgrade-->"
+fi
+
+#Installing necessary configurations <---------3-------->
+sudo $mgr install squid -y && sudo $mgr install firewalld -y
+
+#Service enabling <--------4--------->
+systemctl restart squid
+systemctl enable squid
+
+#Firewall configuration <--------5--------->
+firewall-cmd --zone=public --add-service=squid --permanent
+firewall-cmd --reload
+
+#Identifying ip address in current system <--------6--------->
+a=$(ip a | egrep -a [0-9]{3}\.[0-9]{3}\.[0-9]{3}\.[0-9]{3}\/24 | awk -F " " '{print $2}')
+b=$(echo "$a" | sed 's/\//\\\//g')
+
+#Setting configuration <--------7--------->
+sed -i 's/acl localnet src 10.0.0.0\/8/acl localnet src $b/g' /etc/squid/squid.conf
+sed -i 's/#cache_dir ufs \/var\/spool\/squid 100 16 256/cache_dir ufs \/var\/spool\/squid 10000 16 256/g' /etc/squid/squid.conf
+
+#<---------END--------->
